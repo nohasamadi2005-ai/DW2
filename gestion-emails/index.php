@@ -63,6 +63,134 @@
     }
 
     ?>
+
+    <hr>
+
+<h2>Envoyer des fichiers par email</h2>
+
+<form action="envoyer.php" method="POST">
+
+    <h3>Sélectionner les fichiers :</h3>
+
+    <?php
+
+    if (file_exists("EmailsT.txt")) {
+        echo '
+        <p>
+            <input type="checkbox" name="fichiers[]" value="EmailsT.txt">
+            EmailsT.txt
+        </p>';
+    }
+
+    if (file_exists("EmailInvalide.txt")) {
+        echo '
+        <p>
+            <input type="checkbox" name="fichiers[]" value="EmailInvalide.txt">
+            EmailInvalide.txt
+        </p>';
+    }
+
+    foreach (glob("domaines/*.txt") as $fichier) {
+
+        $nomFichier = basename($fichier);
+
+        echo '
+        <p>
+            <input type="checkbox" name="fichiers[]" value="' . $fichier . '">
+            ' . $nomFichier . '
+        </p>';
+    }
+
+    ?>
+
+    <h3>Email destinataire :</h3>
+
+    <input
+        type="email"
+        name="destinataire"
+        placeholder="example@gmail.com"
+        required
+    >
+
+    <br><br>
+
+    <button type="submit">
+        ENVOYER
+    </button>
+
+</form>
+
+
+<hr>
+
+<h2>Envoyer un message aux adresses sélectionnées</h2>
+
+<form
+    action="envoyer_message.php"
+    method="POST"
+    enctype="multipart/form-data"
+>
+
+    <h3>Emails disponibles :</h3>
+
+    <?php
+
+    if (file_exists("EmailsT.txt")) {
+
+        $emails = file("EmailsT.txt");
+
+        foreach ($emails as $email) {
+
+            $email = trim($email);
+
+            if ($email !== "") {
+
+                echo '
+                <p>
+                    <input
+                        type="checkbox"
+                        name="destinataires[]"
+                        value="' . htmlspecialchars($email) . '"
+                    >
+                    ' . htmlspecialchars($email) . '
+                </p>';
+            }
+        }
+    }
+
+    ?>
+
+    <h3>Objet :</h3>
+
+    <input
+        type="text"
+        name="objet"
+        required
+    >
+
+    <h3>Message :</h3>
+
+    <textarea
+        name="message"
+        rows="6"
+        cols="50"
+        required
+    ></textarea>
+
+    <h3>Pièce jointe (optionnelle) :</h3>
+
+    <input
+        type="file"
+        name="piece_jointe"
+    >
+
+    <br><br>
+
+    <button type="submit">
+        ENVOYER
+    </button>
+
+</form>
     
 </body>
 </html>
