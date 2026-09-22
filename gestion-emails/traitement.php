@@ -1,4 +1,11 @@
 <?php
+if (!file_exists("emails.txt") || filesize("emails.txt") == 0) {
+
+    header("Location: index.php?traitement=erreur");
+    exit;
+}
+
+
 
 $emails = file("emails.txt");
 
@@ -86,7 +93,11 @@ echo "<h3>Emails valides sans doublons :</h3>";
 foreach ($emailsValides as $email) {
     echo $email . "<br>";
 }
+echo '<br>';
 
+echo '<a href="index.php">
+        <button>Retour à la page d’accueil</button>
+      </a>';
 
 
 ?>

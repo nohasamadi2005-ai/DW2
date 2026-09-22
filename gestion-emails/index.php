@@ -1,6 +1,15 @@
  <?php
 
 $messageAjout = "";
+$messageTraitement = "";
+
+if (isset($_GET["traitement"])) {
+
+    if ($_GET["traitement"] === "erreur") {
+
+        $messageTraitement = "Erreur : aucun fichier n'a été sélectionné.";
+    }
+}
 
 if (isset($_GET["ajout"])) {
 
@@ -52,6 +61,13 @@ if (isset($_GET["ajout"])) {
     <a href="traitement.php">
         <button>Traiter le fichier</button>
     </a>
+    <?php
+
+if ($messageTraitement !== "") {
+    echo "<p style='color:red;'>" . $messageTraitement . "</p>";
+}
+
+?>
 
     <hr>
 
