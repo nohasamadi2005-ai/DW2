@@ -37,7 +37,121 @@ if (isset($_GET["ajout"])) {
     <meta charset="UTF-8">
     <title>Gestion des emails</title>
 </head>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    margin: 0;
+    padding: 30px;
+}
 
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 35px;
+}
+
+h2 {
+    color: #444;
+    font-size: 21px;
+    margin-bottom: 15px;
+}
+
+h3 {
+    color: #555;
+    font-size: 16px;
+}
+
+.card {
+    background-color: white;
+    padding: 22px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input[type="email"],
+input[type="text"],
+input[type="file"],
+textarea {
+    width: 100%;
+    padding: 9px;
+    margin-top: 7px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    background-color: #4f7d68;
+    color: white;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #3f6755;
+}
+
+.file-link {
+    display: block;
+    color: #4f7d68;
+    text-decoration: none;
+    padding: 8px 0;
+}
+
+.file-link:hover {
+    text-decoration: underline;
+}
+
+.checkbox-item {
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.checkbox-item input {
+    margin-right: 8px;
+}
+
+.message-success {
+    background-color: #edf6f1;
+    color: #35604d;
+    border: 1px solid #c9ded3;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: 4px;
+}
+
+.message-error {
+    background-color: #f9eeee;
+    color: #a04444;
+    border: 1px solid #e4caca;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: 4px;
+}
+
+hr {
+    display: none;
+}
+</style>
+<div class="container">
 <body>
 
     <h1>GESTION DES EMAILS</h1>
@@ -118,7 +232,6 @@ if ($messageTraitement !== "") {
         type="email"
         id="email"
         name="email"
-        placeholder="example@gmail.com"
         required
     >
 
@@ -178,7 +291,6 @@ if ($messageAjout !== "") {
     <input
         type="email"
         name="destinataire"
-        placeholder="example@gmail.com"
         required
     >
 
