@@ -30,7 +30,9 @@ foreach ($emails as $email) {
 $emailsValides = array_unique($emailsValides);
 file_put_contents(
     "emails.txt",
-    implode(PHP_EOL, $emailsValides)
+    $emailsValides
+        ? implode(PHP_EOL, $emailsValides) . PHP_EOL
+        : ""
 );
 // Trier les emails
 sort($emailsValides);
@@ -39,9 +41,10 @@ sort($emailsValides);
 // Enregistrer les emails triés dans EmailsT.txt
 file_put_contents(
     "EmailsT.txt",
-    implode(PHP_EOL, $emailsValides)
+    $emailsValides
+        ? implode(PHP_EOL, $emailsValides) . PHP_EOL
+        : ""
 );
-
 if (!is_dir("domaines")) {
     mkdir("domaines");
 }

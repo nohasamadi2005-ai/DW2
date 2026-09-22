@@ -1,4 +1,28 @@
+ <?php
+
+$messageAjout = "";
+
+if (isset($_GET["ajout"])) {
+
+    if ($_GET["ajout"] === "success") {
+
+        $messageAjout = "L'adresse email a été ajoutée avec succès.";
+
+    } elseif ($_GET["ajout"] === "invalid") {
+
+        $messageAjout = "L'adresse email est invalide.";
+
+    } elseif ($_GET["ajout"] === "existe") {
+
+        $messageAjout = "Cette adresse email existe déjà.";
+    }
+}
+
+?>
+
 <!DOCTYPE html>
+<html lang="fr">
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -65,6 +89,36 @@
     ?>
 
     <hr>
+
+<h2>Ajouter une nouvelle adresse email</h2>
+
+<form action="ajouter.php" method="POST">
+
+    <label for="email">
+        Adresse email :
+    </label>
+
+    <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="example@gmail.com"
+        required
+    >
+
+    <button type="submit">
+        AJOUTER
+    </button>
+
+</form>
+<?php
+
+if ($messageAjout !== "") {
+    echo "<p>" . $messageAjout . "</p>";
+}
+
+?>
+<hr>
 
 <h2>Envoyer des fichiers par email</h2>
 
