@@ -7,16 +7,16 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 
-// ==========================================
+
 // 1. RÉCUPÉRER L'EMAIL
-// ==========================================
+
 
 $email = trim($_POST["email"] ?? "");
 
 
-// ==========================================
+
 // 2. VALIDATION CÔTÉ SERVEUR
-// ==========================================
+
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
@@ -26,9 +26,23 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 
-// ==========================================
+//  VÉRIFIER QUE LE DOMAINE EXISTE
+
+
+$parties = explode("@", $email);
+$domaine = $parties[1];
+
+if (!checkdnsrr($domaine, "A")) {
+
+    header("Location: index.php?ajout=domaine_invalide");
+
+    exit;
+}
+
+
+
 // 3. VÉRIFIER QUE emails.txt EXISTE
-// ==========================================
+
 
 if (!file_exists("emails.txt")) {
 

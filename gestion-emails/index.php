@@ -11,21 +11,25 @@ if (isset($_GET["traitement"])) {
     }
 }
 
-if (isset($_GET["ajout"])) {
+if (isset($_GET["ajout"])) { 
+ 
+    if ($_GET["ajout"] === "success") { 
 
-    if ($_GET["ajout"] === "success") {
+        $messageAjout = "L'adresse email a été ajoutée avec succès."; 
 
-        $messageAjout = "L'adresse email a été ajoutée avec succès.";
+    } elseif ($_GET["ajout"] === "invalid") { 
 
-    } elseif ($_GET["ajout"] === "invalid") {
+        $messageAjout = "L'adresse email est invalide."; 
 
-        $messageAjout = "L'adresse email est invalide.";
+    } elseif ($_GET["ajout"] === "domaine_invalide") { 
 
-    } elseif ($_GET["ajout"] === "existe") {
+        $messageAjout = "Le domaine de cette adresse email n'existe pas."; 
 
-        $messageAjout = "Cette adresse email existe déjà.";
-    }
-}
+    } elseif ($_GET["ajout"] === "existe") { 
+
+        $messageAjout = "Cette adresse email existe déjà."; 
+    } 
+} 
 
 ?>
 
