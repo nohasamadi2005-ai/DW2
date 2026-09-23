@@ -1,11 +1,10 @@
 <?php
+
 if (!file_exists("emails.txt") || filesize("emails.txt") == 0) {
 
     header("Location: index.php?traitement=erreur");
     exit;
 }
-
-
 
 $emails = file("emails.txt");
 
@@ -20,27 +19,53 @@ foreach ($emails as $email) {
 
     if ($email !== "") {
 
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-            $emailsValides[] = $email;
-
-        } else {
+        // 1. Vérifier la forme de l'email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
             file_put_contents(
                 "EmailInvalide.txt",
                 $email . PHP_EOL,
                 FILE_APPEND
             );
+
+            continue;
         }
+
+        // 2. Récupérer le domaine
+        $parties = explode("@", $email);
+        $domaine = $parties[1];
+
+        // 3. Vérifier si le domaine existe
+        if (!checkdnsrr($domaine, "A")) {
+
+            file_put_contents(
+                "EmailInvalide.txt",
+                $email . PHP_EOL,
+                FILE_APPEND
+            );
+
+            continue;
+        }
+
+        // Si tout est valide
+        $emailsValides[] = $email;
     }
 }
+
+
+// Supprimer les doublons
 $emailsValides = array_unique($emailsValides);
+
+
+// Réécrire emails.txt avec uniquement les emails valides
 file_put_contents(
     "emails.txt",
     $emailsValides
         ? implode(PHP_EOL, $emailsValides) . PHP_EOL
         : ""
 );
+
+
 // Trier les emails
 sort($emailsValides);
 
@@ -52,32 +77,32 @@ file_put_contents(
         ? implode(PHP_EOL, $emailsValides) . PHP_EOL
         : ""
 );
+
+
+// Créer le dossier domaines s'il n'existe pas
 if (!is_dir("domaines")) {
     mkdir("domaines");
 }
 
-// 9. Vider les anciens fichiers de domaines
+
+// Vider les anciens fichiers de domaines
 foreach (glob("domaines/*.txt") as $fichier) {
     unlink($fichier);
 }
 
 
+// Classer les emails par domaine
 foreach ($emailsValides as $email) {
 
-    // Séparer l'email avec @
     $parties = explode("@", $email);
 
-    // Récupérer le domaine
     $domaine = $parties[1];
 
-    // Récupérer le nom du domaine
     // Exemple : gmail.com → gmail
     $nomDomaine = explode(".", $domaine)[0];
 
-    // Nom du fichier
     $fichier = "domaines/" . $nomDomaine . ".txt";
 
-    // Ajouter l'email dans le fichier
     file_put_contents(
         $fichier,
         $email . PHP_EOL,
@@ -93,11 +118,11 @@ echo "<h3>Emails valides sans doublons :</h3>";
 foreach ($emailsValides as $email) {
     echo $email . "<br>";
 }
+
 echo '<br>';
 
 echo '<a href="index.php">
         <button>Retour à la page d’accueil</button>
       </a>';
-
 
 ?>

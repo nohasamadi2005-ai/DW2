@@ -7,16 +7,12 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 
-
-// 1. RÉCUPÉRER L'EMAIL
-
+// RÉCUPÉRER L'EMAIL
 
 $email = trim($_POST["email"] ?? "");
 
 
-
-// 2. VALIDATION CÔTÉ SERVEUR
-
+// VALIDATION CÔTÉ SERVEUR
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
@@ -26,11 +22,25 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 
-//  VÉRIFIER QUE LE DOMAINE EXISTE
-
+// VÉRIFIER QUE LE DOMAINE EXISTE
 
 $parties = explode("@", $email);
 $domaine = $parties[1];
+
+
+// Vérifier que le nom du domaine contient des lettres
+
+$nomDomaine = explode(".", $domaine)[0];
+
+if (!preg_match('/[a-zA-Z]/', $nomDomaine)) {
+
+    header("Location: index.php?ajout=domaine_invalide");
+
+    exit;
+}
+
+
+// Vérifier que le domaine existe réellement
 
 if (!checkdnsrr($domaine, "A")) {
 
@@ -40,9 +50,7 @@ if (!checkdnsrr($domaine, "A")) {
 }
 
 
-
-// 3. VÉRIFIER QUE emails.txt EXISTE
-
+// VÉRIFIER QUE emails.txt EXISTE
 
 if (!file_exists("emails.txt")) {
 
@@ -50,9 +58,7 @@ if (!file_exists("emails.txt")) {
 }
 
 
-// ==========================================
-// 4. LIRE LES EMAILS EXISTANTS
-// ==========================================
+// LIRE LES EMAILS EXISTANTS
 
 $emails = file(
     "emails.txt",
@@ -60,9 +66,7 @@ $emails = file(
 );
 
 
-// ==========================================
-// 5. VÉRIFIER SI L'EMAIL EXISTE DÉJÀ
-// ==========================================
+// VÉRIFIER SI L'EMAIL EXISTE DÉJÀ
 
 if (in_array($email, $emails)) {
 
@@ -72,9 +76,7 @@ if (in_array($email, $emails)) {
 }
 
 
-// ==========================================
-// 6. AJOUTER L'EMAIL DANS emails.txt
-// ==========================================
+// AJOUTER L'EMAIL DANS emails.txt
 
 file_put_contents(
     "emails.txt",
@@ -83,9 +85,7 @@ file_put_contents(
 );
 
 
-// ==========================================
-// 7. RELANCER LE TRAITEMENT
-// ==========================================
+// RELANCER LE TRAITEMENT
 
 ob_start();
 
@@ -94,10 +94,10 @@ include "traitement.php";
 ob_end_clean();
 
 
-// ==========================================
-// 8. RETOURNER VERS index.php
-// ==========================================
+// RETOURNER VERS index.php
 
 header("Location: index.php?ajout=success");
+
 exit;
+
 ?>

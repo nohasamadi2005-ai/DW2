@@ -1,0 +1,17 @@
+sara@gmail.com
+ali@yahoo.com
+ahmed@hotmail.com
+oumaime@gmail.com
+sara@gmail.com
+test@abcxyz987654.com
+test@domainefaux123456.com
+user@qwerty999999.com
+hello@fake-domain-98765.com
+abc@invalid
+hello@
+@gmail.com
+testgmail.com
+ahmed@@gmail.com
+meryem outlook.com
+12345
+test@1345.com

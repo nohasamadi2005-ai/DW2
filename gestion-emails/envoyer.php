@@ -5,14 +5,13 @@ require 'vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 
 
-// 1. Récupérer les données
+// 1. RÉCUPÉRER LES DONNÉES
 
-$destinataire = $_POST["destinataire"];
+$destinataire = $_POST["destinataire"] ?? "";
+$fichiers = $_POST["fichiers"] ?? "";
 
-$fichiers = $_POST["fichiers"];
 
-
-// 2. Vérifier l'adresse email
+// 2. VÉRIFIER LA SYNTAXE DE L'EMAIL
 
 if (!filter_var($destinataire, FILTER_VALIDATE_EMAIL)) {
 
@@ -21,7 +20,34 @@ if (!filter_var($destinataire, FILTER_VALIDATE_EMAIL)) {
 }
 
 
-// 3. Vérifier les fichiers
+// 3. RÉCUPÉRER LE DOMAINE
+
+$parties = explode("@", $destinataire);
+
+$domaine = $parties[1];
+
+
+// 4. VÉRIFIER QUE LE NOM DU DOMAINE CONTIENT DES LETTRES
+
+$nomDomaine = explode(".", $domaine)[0];
+
+if (!preg_match('/[a-zA-Z]/', $nomDomaine)) {
+
+    echo "Domaine invalide.";
+    exit;
+}
+
+
+// 5. VÉRIFIER QUE LE DOMAINE EXISTE
+
+if (!checkdnsrr($domaine, "A")) {
+
+    echo "Domaine invalide ou inexistant.";
+    exit;
+}
+
+
+// 6. VÉRIFIER LES FICHIERS
 
 if (empty($fichiers)) {
 
@@ -30,12 +56,12 @@ if (empty($fichiers)) {
 }
 
 
-// 4. Créer PHPMailer
+// 7. CRÉER PHPMailer
 
 $mail = new PHPMailer();
 
 
-// 5. Configurer SMTP Gmail
+// 8. CONFIGURER SMTP GMAIL
 
 $mail->isSMTP();
 
@@ -43,44 +69,47 @@ $mail->Host = 'smtp.gmail.com';
 
 $mail->SMTPAuth = true;
 
-$mail->Username = 'rayaakouibel@gmail.com';
+$mail->Username = 'TON_EMAIL@gmail.com';
 
-$mail->Password = 'cskm djpd nmwz hbcu';
+$mail->Password = 'TON_APP_PASSWORD';
 
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
 $mail->Port = 587;
 
 
-// 6. Définir l'expéditeur
+// 9. DÉFINIR L'EXPÉDITEUR
 
 $mail->setFrom(
-    'rayaakouibel@gmail.com',
+    'TON_EMAIL@gmail.com',
     'Gestion des emails'
 );
 
 
-// 7. Définir le destinataire
+// 10. DÉFINIR LE DESTINATAIRE
 
 $mail->addAddress($destinataire);
 
 
-// 8. Définir le sujet
+// 11. DÉFINIR LE SUJET
 
 $mail->Subject = 'Fichiers générés';
 
 
-// 9. Définir le message
+// 12. DÉFINIR LE MESSAGE
 
 $mail->Body = 'Bonjour, veuillez trouver les fichiers en pièces jointes.';
 
 
-// 10. Ajouter les fichiers sélectionnés comme pièces jointes
+// 13. AJOUTER LES FICHIERS
 
 foreach ($fichiers as $fichier) {
 
     $mail->addAttachment($fichier);
 }
+
+
+// 14. ENVOYER L'EMAIL
 
 try {
 
@@ -91,8 +120,8 @@ try {
 } catch (Exception $e) {
 
     echo "<h2>Erreur lors de l'envoi :</h2>";
-    echo $mail->ErrorInfo;
 
+    echo $mail->ErrorInfo;
 }
 
 ?>
